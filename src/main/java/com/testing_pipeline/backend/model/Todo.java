@@ -14,8 +14,12 @@ public class Todo {
     @Column(name = "title", nullable = false)
     private String title;
 
-    public Todo(String title) {
+    @Column(name = "priority", nullable = false)
+    private Priority priority;
+
+    public Todo(String title, Priority priority) {
         this.title = title;
+        this.priority = priority;
     }
 
     public Todo() {

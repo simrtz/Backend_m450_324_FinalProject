@@ -7,5 +7,6 @@ USE TodoDatabase;
 -- Create a table
 CREATE TABLE IF NOT EXISTS todo (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL
+    title VARCHAR(255) NOT NULL,
+    priority VARCHAR(255) NOT NULL
 );

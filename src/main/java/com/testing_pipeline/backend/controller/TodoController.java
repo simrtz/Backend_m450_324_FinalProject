@@ -1,5 +1,6 @@
 package com.testing_pipeline.backend.controller;
 
+import com.testing_pipeline.backend.model.Priority;
 import com.testing_pipeline.backend.model.Todo;
 import com.testing_pipeline.backend.service.TodoService;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,11 @@ public class TodoController {
     @GetMapping("/todo")
     public List<Todo> getAllTodos() {
         return todoService.getAll();
+    }
+
+    @GetMapping("/todo/{priority}")
+    public List<Todo> getAllTodos(@PathVariable Priority priority) {
+        return todoService.getByPriority(priority);
     }
 
     @PostMapping("/todo")
