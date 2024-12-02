@@ -14,6 +14,9 @@ public class Todo {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Column(name = "completed", nullable = false)
+    private boolean completed;
+
     @Column(name = "priority", nullable = false)
     private Priority priority;
 
