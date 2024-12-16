@@ -1,7 +1,6 @@
 package com.testing_pipeline.backend.model;
 
 import jakarta.persistence.*;
-import org.springframework.lang.NonNull;
 
 @Entity
 public class Todo {
@@ -17,11 +16,13 @@ public class Todo {
     @Column(name = "completed", nullable = false)
     private boolean completed;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "priority", nullable = false)
     private Priority priority;
 
-    public Todo(String title, Priority priority) {
+    public Todo(String title, boolean completed, Priority priority) {
         this.title = title;
+        this.completed = completed;
         this.priority = priority;
     }
 
@@ -43,5 +44,21 @@ public class Todo {
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 }
