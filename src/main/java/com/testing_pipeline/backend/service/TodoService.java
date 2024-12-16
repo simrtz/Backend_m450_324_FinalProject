@@ -1,5 +1,6 @@
 package com.testing_pipeline.backend.service;
 
+import com.testing_pipeline.backend.model.Priority;
 import com.testing_pipeline.backend.model.Todo;
 import com.testing_pipeline.backend.repository.TodoRepository;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,10 @@ public class TodoService {
 
     public List<Todo> getAll() {
         return todoRepository.findAll();
+    }
+
+    public List<Todo> getByPriority(Priority priority) {
+        return todoRepository.findTodoByPriority(priority);
     }
 
     public Todo save(Todo todo) {
