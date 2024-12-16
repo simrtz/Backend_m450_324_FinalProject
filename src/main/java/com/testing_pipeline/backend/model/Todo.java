@@ -17,6 +17,9 @@ public class Todo {
     @Column(name = "completed", nullable = false)
     private boolean completed;
 
+    @Column(name = "category", nullable = false)
+    private String category;
+    @Enumerated(EnumType.STRING)
     @Column(name = "priority", nullable = false)
     private Priority priority;
 
@@ -43,5 +46,29 @@ public class Todo {
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
