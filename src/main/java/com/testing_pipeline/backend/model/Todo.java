@@ -78,7 +78,8 @@ public class Todo {
 
     public void setCategory(String category) {
         this.category = category;
-      
+    }
+
     public LocalDateTime getDueDate() {
         return dueDate;
     }
