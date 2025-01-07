@@ -10,5 +10,6 @@ CREATE TABLE IF NOT EXISTS todo (
     title VARCHAR(255) NOT NULL,
     completed BOOLEAN NOT NULL,
     priority VARCHAR(255) NOT NULL,
-    category VARCHAR(255) NOT NULL
+    category VARCHAR(255) NOT NULL,
+    due_date DATETIME
 );

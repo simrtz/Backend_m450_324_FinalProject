@@ -1,7 +1,9 @@
 package com.testing_pipeline.backend.model;
 
 import jakarta.persistence.*;
-import org.springframework.lang.NonNull;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Todo {
@@ -19,13 +21,19 @@ public class Todo {
 
     @Column(name = "category", nullable = false)
     private String category;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "priority", nullable = false)
     private Priority priority;
 
-    public Todo(String title, Priority priority) {
+    @Column(name = "due_date")
+    private LocalDateTime dueDate;
+
+    public Todo(String title, boolean completed, Priority priority, LocalDateTime dueDate) {
         this.title = title;
+        this.completed = completed;
         this.priority = priority;
+        this.dueDate = dueDate;
     }
 
     public Todo() {
@@ -70,5 +78,12 @@ public class Todo {
 
     public void setCategory(String category) {
         this.category = category;
+      
+    public LocalDateTime getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDateTime dueDate) {
+        this.dueDate = dueDate;
     }
 }
