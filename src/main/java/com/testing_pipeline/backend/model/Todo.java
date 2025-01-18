@@ -29,10 +29,11 @@ public class Todo {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
-    public Todo(String title, boolean completed, Priority priority, LocalDateTime dueDate) {
+    public Todo(String title, boolean completed, String category, Priority priority, LocalDateTime dueDate) {
         this.title = title;
         this.completed = completed;
         this.priority = priority;
+        this.category = category;
         this.dueDate = dueDate;
     }
 
