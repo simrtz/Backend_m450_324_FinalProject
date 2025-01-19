@@ -24,7 +24,7 @@ public class TodoController {
     }
 
     @GetMapping("/todo/{priority}")
-    public List<Todo> getAllTodos(@PathVariable Priority priority) {
+    public List<Todo> getTodosByPriority(@PathVariable Priority priority) {
         return todoService.getByPriority(priority);
     }
 
