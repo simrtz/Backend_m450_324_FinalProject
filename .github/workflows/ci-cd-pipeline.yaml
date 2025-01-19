@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  # Test: Code holen, JDK 17 einrichten, Abhängigkeiten installieren, Tests durchführen
+  # Test: Code holen, JDK 17 einrichten, Abhängigkeiten installieren und cachen, Tests durchführen (Unit und Integration)
   test:
     runs-on: ubuntu-22.04
     steps:
@@ -21,20 +21,22 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
+      # Cache Maven-Abhängigkeiten, um den Download bei späteren Runs zu vermeiden
       - name: Cache Maven dependencies
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-
+            maven-${{ runner.os }}-
 
       - name: Build and Test with Maven
         run: |
           mvn clean install
 #          mvn test
 
-  # Build: Nach erfolgreichem Test, Code holen, JDK 17 einrichten, Abhängigkeiten installieren, Anwendung bauen
+  # Build: Nach erfolgreichem Test, Code holen, JDK 17 einrichten, Abhängigkeiten installieren/cache,
+  #        Anwendung bauen, build prüfen
   build:
     runs-on: ubuntu-22.04
     needs: test
@@ -48,16 +50,25 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Cache Maven dependencies
+      # Cache Maven-Abhängigkeiten und das Target-Verzeichnis, um den Build zu beschleunigen
+      - name: Cache Maven dependencies and target
         uses: actions/cache@v4
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          path: |
+            ~/.m2/repository
+            target
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-
+            maven-${{ runner.os }}-
 
+      # Baue die Anwendung (Verwendet das gecachte Maven-Repository und target)
       - name: Build application
-        run: mvn clean package
+        run: mvn clean install
+
+      # Überprüft, ob eine .jar-Datei im 'target'-Verzeichnis existiert sonst Errpr mit Build failed
+      - name: Verify build
+        run: |
+          ls -l target/*.jar || (echo "Build failed: Jar file not found" && exit 1)
 
   # Deploy: Nach erfolgreichem Build, Holt Code,
   #         richtet Docker Buildx ein (für Multi-Architektur-Builds), aktiviert QEMU (emulierte Plattformen),
@@ -70,18 +81,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Richtet Docker Buildx ein, eine Erweiterung von Docker, die Multi-Architektur-Builds unterstützt
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      # Docker Hub login mit Credentials aus Github secrets
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      # Richtet QEMU ein, das notwendig ist, um Container-Images für unterschiedliche Architekturen (ARM, x86, etc.) zu erstellen
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
+      # Image Build und Push to Dockerhub
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
