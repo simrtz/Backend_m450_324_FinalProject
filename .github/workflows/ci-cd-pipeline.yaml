@@ -33,7 +33,7 @@ jobs:
       - name: Build and Test with Maven
         run: |
           mvn clean install
-#          mvn test
+          mvn test
 
   # Build: Nach erfolgreichem Test, Code holen, JDK 17 einrichten, Abhängigkeiten installieren/cache,
   #        Anwendung bauen, build prüfen
