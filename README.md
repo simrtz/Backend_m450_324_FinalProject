@@ -14,15 +14,19 @@ Die Pieline beinhaltet Testen, Bauen der Applikation und Deployment als Docker i
 
 ## Übersicht der Pipeline
 
-### **1. Tests**
+### **1. Lint**
+Lint überprüft den Code auf Einhaltung der definierten Codierstandards und Formatierung von ESLint. <br>
+Ist dieser Schritt nicht erfolgreich, wird der Build Prozess nicht angestossen und entsprechende Fehlermeldungen angezeigt.
+
+### **2. Tests**
 Die Tests stellen sicher, dass alle Schnittstellentests (Wiremock) und Unittests erfolgreich ausgeführt werden. <br>
 Ist dieser Schritt nicht erfolgreich, wird der Build Prozess nicht angestossen und entsprechende Fehlermeldungen angezeigt.
 
-### **2. Build**
+### **3. Build**
 Die Build-Phase erstellt die Anwendung, nachdem die Lint- und Test-Phasen erfolgreich abgeschlossen wurden.
 - **Abhängigkeiten:** Test (Unit) und Test (Integration) müssen erfolgreich abgeschlossen sein.
 
-### **3. Deploy**
+### **4. Deploy**
 Der Deploy Job veröffentlicht die Anwendung als Docker-Image auf DockerHub.
 - **Abhängigkeiten:** Build muss erfolgreich abgeschlossen sein.
 
@@ -30,6 +34,6 @@ Der Deploy Job veröffentlicht die Anwendung als Docker-Image auf DockerHub.
 ---
 
 ## Besonderheiten der Pipeline
-
+- **Parallele Ausführung:** Die Phasen `lint` und `test` laufen parallel, um die Laufzeit der Pipeline zu optimieren.
 - **Caching:** Artifakte/Abhängigkeiten werden zwischen den Builds zwischengespeichert, um die Installationszeit zu reduzieren.
 - **Deployment:** Das fertige Docker-Image wird mit Unterstützung für Multi-Architektur-Builds erstellt und automatisch auf DockerHub hochgeladen.
