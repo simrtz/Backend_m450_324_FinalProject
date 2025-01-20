@@ -35,11 +35,38 @@ jobs:
           mvn clean install
           mvn test
 
-  # Build: Nach erfolgreichem Test, Code holen, JDK 17 einrichten, Abhängigkeiten installieren/cache,
+      # Lint: Code holen, JDK 17 einrichten, Abhängigkeiten installieren und cachen, Tests durchführen (Unit und Integration)
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      # Cache Maven-Abhängigkeiten, um den Download bei späteren Runs zu vermeiden
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            maven-${{ runner.os }}-
+
+      - name: Build and Test with Maven
+        run: |
+          mvn clean install
+          mvn checkstyle:check
+
+  # Build: Nach erfolgreichem Test&Lint, Code holen, JDK 17 einrichten, Abhängigkeiten installieren/cache,
   #        Anwendung bauen, build prüfen
   build:
     runs-on: ubuntu-22.04
-    needs: test
+    needs: [test, lint]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
