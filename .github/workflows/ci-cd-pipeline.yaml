@@ -97,6 +97,10 @@ jobs:
         run: |
           ls -l target/*.jar || (echo "Build failed: Jar file not found" && exit 1)
 
+      - name: Fail step (test)
+        run: |
+          echo "Intentional failure for testing"
+          exit 1
   # Deploy: Nach erfolgreichem Build, Holt Code,
   #         richtet Docker Buildx ein (für Multi-Architektur-Builds), aktiviert QEMU (emulierte Plattformen),
   #         meldet sich bei DockerHub an,
